@@ -3,248 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AfiriaxCapital | Algoritmos de Alta Precisión | Nasdaq & Oro</title>
+    <title>AfiriaxCapital | Bots de Nasdaq y Oro</title>
     <style>
-        /* VARIABLES DE COLOR */
         :root { 
-            --verde: #76ff03; /* Verde neón para acentos */
-            --fondo: #050505; /* Negro profundo de fondo */
-            --tarjeta: #111111; /* Gris muy oscuro para tarjetas */
+            --verde: #76ff03; 
+            --fondo: #050505; 
+            --tarjeta: #111111; 
             --texto-principal: #ffffff;
             --texto-secundario: #aaaaaa;
         }
 
-        /* ESTILOS GENERALES */
         body { 
-            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            background: var(--fondo); 
-            color: var(--texto-principal); 
-            line-height: 1.6; 
-            scroll-behavior: smooth; /* Desplazamiento suave al usar el menú */
+            font-family: 'Inter', sans-serif; 
+            margin: 0; background: var(--fondo); color: var(--texto-principal); 
+            line-height: 1.6; scroll-behavior: smooth;
         }
 
-        /* NAVEGACIÓN (HEADER) - AQUÍ ESTÁ EL CAMBIO DEL LOGO */
+        /* NAVEGACIÓN */
         nav { 
-            padding: 15px 10%; 
-            background: rgba(0,0,0,0.95); /* Fondo casi negro translúcido */
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid #222; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; /* Asegura que siempre esté por encima */
+            padding: 15px 10%; background: rgba(0,0,0,0.95); 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000;
         }
 
-        /* Contenedor del Logo Personalizado */
-        .logo-container {
-            display: flex;
-            align-items: center;
-            text-decoration: none; /* Quita el subrayado si fuera un enlace */
+        .logo-container img {
+            height: 55px; width: auto; display: block;
         }
 
-        /* Estilos para la IMAGEN del Logo */
-        .logo-img {
-            height: 50px; /* Ajusta la altura del logo según prefieras */
-            width: auto; /* Mantiene la proporción */
-            display: block;
-            /* Opcional: añade un ligero brillo si el logo es oscuro */
-            /* filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); */
-        }
-
-        /* Menú de Navegación */
         .menu a { 
-            color: var(--texto-principal); 
-            text-decoration: none; 
-            margin-left: 25px; 
-            font-size: 0.9rem; 
-            text-transform: uppercase; 
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: 0.3s; 
+            color: var(--texto-principal); text-decoration: none; 
+            margin-left: 25px; font-size: 0.9rem; text-transform: uppercase; 
+            font-weight: 600; transition: 0.3s; 
         }
-        .menu a:hover { 
-            color: var(--verde); 
-        }
+        .menu a:hover { color: var(--verde); }
 
-        /* SECCIÓN HERO (PRINCIPAL) */
+        /* HERO */
         .hero { 
-            padding: 150px 20px; 
-            text-align: center; 
-            /* Gradiente radial para dar profundidad */
+            padding: 150px 20px; text-align: center; 
             background: radial-gradient(circle at center, #1a3311 0%, #050505 80%); 
         }
-        h1 { 
-            font-size: clamp(2.8rem, 9vw, 5rem); /* Tamaño de fuente adaptable */
-            margin: 0; 
-            text-transform: uppercase; 
-            font-weight: 900; 
-            line-height: 1.1; 
-            letter-spacing: -2px;
-        }
-        h1 span { 
-            color: var(--verde); 
-            /* Efecto de brillo neón */
-            text-shadow: 0 0 30px rgba(118, 255, 3, 0.6); 
-        }
-        .hero p { 
-            font-size: 1.3rem; 
-            color: var(--texto-secundario); 
-            max-width: 750px; 
-            margin: 35px auto; 
-            font-weight: 400;
-        }
+        h1 { font-size: clamp(2.8rem, 9vw, 5rem); margin: 0; text-transform: uppercase; font-weight: 900; line-height: 1.1; }
+        h1 span { color: var(--verde); text-shadow: 0 0 30px rgba(118, 255, 3, 0.6); }
+        .hero p { font-size: 1.3rem; color: var(--texto-secundario); max-width: 750px; margin: 35px auto; }
 
-        /* BOTONES */
+        /* BOTÓN WHATSAPP */
         .btn { 
-            display: inline-block; 
-            padding: 18px 45px; 
-            background: var(--verde); 
-            color: #000; 
-            text-decoration: none; 
-            border-radius: 5px; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            transition: 0.3s; 
+            display: inline-block; padding: 18px 45px; background: var(--verde); 
+            color: #000; text-decoration: none; border-radius: 5px; 
+            font-weight: 800; text-transform: uppercase; transition: 0.3s; 
             box-shadow: 0 5px 15px rgba(118, 255, 3, 0.2);
         }
-        .btn:hover { 
-            transform: translateY(-3px) scale(1.03); 
-            box-shadow: 0 10px 30px rgba(118, 255, 3, 0.5); 
-        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(118, 255, 3, 0.5); }
 
-        /* SECCIONES DE CONTENIDO */
-        .section { 
-            padding: 100px 10%; 
-        }
-        .section h2 { 
-            font-size: 2.8rem; 
-            text-align: center; 
-            margin-bottom: 60px; 
-            text-transform: uppercase; 
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-        .section h2 span { 
-            color: var(--verde); 
-        }
+        /* SECCIONES */
+        .section { padding: 100px 10%; }
+        .section h2 { font-size: 2.8rem; text-align: center; margin-bottom: 60px; text-transform: uppercase; }
+        .section h2 span { color: var(--verde); }
         
-        /* GRID DE CARACTERÍSTICAS */
-        .grid-features { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 40px; 
-        }
-        .feature-card { 
-            background: var(--tarjeta); 
-            padding: 40px; 
-            border-radius: 12px; 
-            border: 1px solid #222;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        /* Línea verde decorativa en el top */
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--verde);
-            transform: scaleX(0);
-            transition: 0.3s;
-            transform-origin: left;
-        }
-        .feature-card:hover {
-            border-color: var(--verde);
-            transform: translateY(-5px);
-        }
-        .feature-card:hover::before {
-            transform: scaleX(1);
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .card { background: var(--tarjeta); padding: 40px; border-radius: 12px; border: 1px solid #222; transition: 0.3s; }
+        .card:hover { border-color: var(--verde); transform: translateY(-5px); }
+        .card h3 { color: var(--verde); margin-top: 0; font-size: 1.6rem; }
+
+        .risk-box { 
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%); padding: 50px; 
+            border-radius: 15px; border: 2px dashed rgba(118, 255, 3, 0.3); 
+            text-align: center; margin-top: 60px; 
         }
 
-        .feature-card h3 { 
-            margin-top: 0; 
-            color: var(--verde); 
-            font-size: 1.6rem; 
-            font-weight: 700;
-        }
-        .feature-card p { 
-            color: #dddddd; 
-            font-size: 1rem; 
-            margin-bottom: 0;
-        }
-
-        /* DESTACADO DE GESTIÓN DE RIESGO */
-        .risk-highlight { 
-            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%); 
-            padding: 50px; 
-            border-radius: 15px; 
-            border: 2px dashed rgba(118, 255, 3, 0.3); 
-            text-align: center; 
-            margin-top: 60px; 
-            position: relative;
-        }
-        .risk-highlight h3 {
-            color: var(--verde);
-            font-size: 1.8rem;
-            margin-top: 0;
-        }
-        .risk-highlight p {
-            color: #fff;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 15px auto 0;
-        }
-
-        /* SECCIÓN PLATAFORMAS (FONDO LIGERAMENTE DIFERENTE) */
-        .plataformas-section {
-            background-color: #080808;
-        }
-
-        /* FOOTER */
-        footer { 
-            padding: 80px 10% 40px; 
-            text-align: center; 
-            color: #555555; 
-            border-top: 1px solid #222; 
-            font-size: 0.85rem; 
-        }
-        .footer-warning {
-            color: #888888;
-            margin-bottom: 20px;
-            font-style: italic;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .footer-copy {
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        
-        /* RESPONSIVE (MÓVILES) */
-        @media (max-width: 768px) {
-            nav { padding: 15px 5%; flex-direction: column; gap: 10px; }
-            .menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
-            .menu a { margin: 0; font-size: 0.8rem; }
-            .hero { padding: 100px 20px; }
-            .section { padding: 60px 5%; }
-            .feature-card { padding: 30px; }
-        }
+        footer { padding: 80px 10% 40px; text-align: center; color: #555; border-top: 1px solid #222; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="#" class="logo-container">
-            <img src="logo.png" alt="AfiriaxCapital Logo" class="logo-img">
-        </a>
+        <div class="logo-container">
+            <img src="logo.png" alt="AfiriaxCapital Logo">
+        </div>
         <div class="menu">
             <a href="#tecnologia">Tecnología</a>
             <a href="#plataformas">Plataformas</a>
@@ -254,54 +89,35 @@
 
     <header class="hero">
         <h1>Trading de <span>Alta Frecuencia</span></h1>
-        <p>Expertos en el desarrollo de algoritmos avanzados optimizados para maximizar la rentabilidad en <strong>NASDAQ 100</strong> y <strong>ORO (XAUUSD)</strong>. Ejecución institucional, ahora a tu alcance.</p>
-        <a href="https://t.me/TuUsuarioDeTelegram" class="btn">Solicitar Acceso VIP</a>
+        <p>Algoritmos avanzados optimizados para NASDAQ 100 y ORO. Ejecución institucional para el trader moderno.</p>
+        <a href="https://wa.me/34631600506?text=Hola,%20estoy%20interesado%20en%20los%20bots%20de%20AfiriaxCapital" class="btn" target="_blank">Solicitar Acceso VIP</a>
     </header>
 
     <section id="tecnologia" class="section">
-        <h2>La Ventaja de <span>AfiriaxCapital</span></h2>
-        <div class="grid-features">
-            <div class="feature-card">
-                <h3>Análisis de Volatilidad Profundo</h3>
-                <p>Nuestros bots interpretan flujos de órdenes y microestructura de mercado en tiempo real, identificando puntos de giro de alta probabilidad.</p>
+        <h2>La Ventaja <span>Afiriax</span></h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Precisión Algorítmica</h3>
+                <p>Entradas basadas en microestructura de mercado y liquidez real.</p>
             </div>
-            <div class="feature-card">
-                <h3>Ejecución Ultra-Rápida</h3>
-                <p>Código optimizado de bajo nivel para MT5 y cTrader, diseñado para minimizar la latencia y asegurar entradas precisas sin slippage significativo.</p>
+            <div class="card">
+                <h3>Velocidad MT5</h3>
+                <p>Ejecución optimizada para minimizar la latencia en activos volátiles.</p>
             </div>
-            <div class="feature-card">
-                <h3>Gestión Dinámica del Riesgo</h3>
-                <p>Incorporamos Stop Loss adaptativo, Take Profit inteligente y algoritmos de protección de capital que se ajustan a las condiciones del mercado.</p>
+            <div class="card">
+                <h3>Riesgo Controlado</h3>
+                <p>Sistemas sin Martingala con Stop Loss dinámico en cada operación.</p>
             </div>
         </div>
-
-        <div class="risk-highlight">
-            <h3>🛡️ Tu Capital, Nuestra Prioridad</h3>
-            <p>Nuestros sistemas son estrictamente NO Martingala y evitan estrategias de alto riesgo como Grid agresivo. Nos enfocamos en el crecimiento orgánico y sostenible de tu cuenta.</p>
-        </div>
-    </section>
-
-    <section id="plataformas" class="section plataformas-section">
-        <h2>Compatibilidad Sin <span>Fricción</span></h2>
-        <div class="grid-features">
-            <div class="feature-card" style="border-top-color: #fff;">
-                <h3>MetaTrader 5 (MT5)</h3>
-                <p>Expert Advisors (EAs) robustos perfectos para cuentas de fondeo o capital propio, con gestión integral.</p>
-            </div>
-            <div class="feature-card" style="border-top-color: #41b883;">
-                <h3>TradingView</h3>
-                <p>Scripts avanzados en Pine Script v5 para alertas precisas o automatización vía webhook.</p>
-            </div>
-            <div class="feature-card" style="border-top-color: #3e7fb2;">
-                <h3>cTrader</h3>
-                <p>cBots desarrollados en C# para usuarios que exigen el máximo rendimiento y control institucional.</p>
-            </div>
+        <div class="risk-box">
+            <h3>🛡️ Tu Capital es Primero</h3>
+            <p>Estrategias sostenibles diseñadas para el crecimiento a largo plazo y protección de cuentas de fondeo.</p>
         </div>
     </section>
 
     <footer id="contacto">
-        <p class="footer-warning">ADVERTENCIA DE RIESGO: El trading de derivados financieros conlleva un alto nivel de riesgo para su capital y no es adecuado para todos los inversores. Asegúrese de comprender completamente los riesgos antes de operar. Los rendimientos pasados no son garantía de rentabilidad futura.</p>
-        <p class="footer-copy">&copy; 2026 AfiriaxCapital.com | Soluciones Líderes en Trading Algorítmico.</p>
+        <p>ADVERTENCIA: El trading conlleva riesgos. Operar con responsabilidad.</p>
+        <p>&copy; 2026 AfiriaxCapital.com | Soluciones de Trading Algorítmico.</p>
     </footer>
 
 </body>
