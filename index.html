@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AfiriaxCapital | Algoritmos de Alta Frecuencia | Nasdaq & Oro</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="icon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icon.png">
-    <link rel="shortcut icon" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <link rel="shortcut icon" href="icon.ico">
+    <link rel="apple-touch-icon" href="icon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -481,74 +480,6 @@
 
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursorRing"></div>
-
-    <!-- TICKER FIJO CENTRADO — Precios en tiempo real -->
-    <div style="background:#000; border-bottom:1px solid #1e1e1e; height:38px; display:flex; align-items:center; justify-content:center; gap:32px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-family:'Space Mono',monospace; font-size:0.62rem; color:#555; letter-spacing:2px;">NAS100</span>
-            <span id="nas-price" style="font-family:'Space Mono',monospace; font-size:0.78rem; color:#f0f0f0; font-weight:700;">—</span>
-            <span id="nas-chg"   style="font-family:'Space Mono',monospace; font-size:0.65rem; color:#555;">—</span>
-        </div>
-        <div style="width:1px; height:16px; background:#222;"></div>
-        <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-family:'Space Mono',monospace; font-size:0.62rem; color:#555; letter-spacing:2px;">XAU/USD</span>
-            <span id="xau-price" style="font-family:'Space Mono',monospace; font-size:0.78rem; color:#f0f0f0; font-weight:700;">—</span>
-            <span id="xau-chg"   style="font-family:'Space Mono',monospace; font-size:0.65rem; color:#555;">—</span>
-        </div>
-        <div style="width:1px; height:16px; background:#222;"></div>
-        <div style="display:flex; align-items:center; gap:6px;">
-            <span id="last-update" style="font-family:'Space Mono',monospace; font-size:0.58rem; color:#333;">Actualizando...</span>
-        </div>
-    </div>
-
-    <script>
-    // ── PRECIOS EN TIEMPO REAL via Yahoo Finance + allorigins proxy ──
-    const PROXY = 'https://api.allorigins.win/get?url=';
-
-    async function fetchYahoo(ticker) {
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1m&range=1d`;
-        const res = await fetch(PROXY + encodeURIComponent(url));
-        const json = await res.json();
-        const data = JSON.parse(json.contents);
-        const meta = data.chart.result[0].meta;
-        return {
-            price: meta.regularMarketPrice,
-            prev:  meta.chartPreviousClose || meta.previousClose,
-        };
-    }
-
-    function renderPrice(priceId, chgId, price, prev) {
-        const pct = ((price - prev) / prev) * 100;
-        const up  = pct >= 0;
-        document.getElementById(priceId).textContent =
-            price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        const chgEl = document.getElementById(chgId);
-        chgEl.textContent = (up ? '▲ +' : '▼ ') + pct.toFixed(2) + '%';
-        chgEl.style.color = up ? '#76ff03' : '#ff3b3b';
-    }
-
-    async function updatePrices() {
-        try {
-            // NQ=F = Nasdaq 100 Futures | GC=F = Gold Futures
-            const [nas, xau] = await Promise.all([
-                fetchYahoo('NQ=F'),
-                fetchYahoo('GC=F'),
-            ]);
-            renderPrice('nas-price', 'nas-chg', nas.price, nas.prev);
-            renderPrice('xau-price', 'xau-chg', xau.price, xau.prev);
-
-            const now = new Date();
-            document.getElementById('last-update').textContent =
-                now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        } catch(e) {
-            console.warn('Error precios:', e);
-            document.getElementById('last-update').textContent = 'Error al cargar';
-        }
-    }
-
-    updatePrices();
-    setInterval(updatePrices, 15000); // refresca cada 15 segundos
-    </script>
 
     <!-- NAV -->
     <nav>
