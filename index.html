@@ -484,16 +484,17 @@
         <div class="ticker-label">LIVE MARKETS</div>
         <div style="overflow:hidden;flex:1;display:flex;align-items:center;">
             <div class="ticker-track" id="tickerTrack">
-                <span class="ticker-item">NQ100 <span class="up">▲ 21,847.50 +0.83%</span></span>
-                <span class="ticker-item">XAUUSD <span class="down">▼ 3,298.10 -0.21%</span></span>
-                <span class="ticker-item">SPX500 <span class="up">▲ 5,912.30 +0.54%</span></span>
-                <span class="ticker-item">DXY <span class="down">▼ 104.21 -0.12%</span></span>
-                <span class="ticker-item">VIX <span class="up">▲ 16.44 +1.2%</span></span>
-                <span class="ticker-item">NQ100 <span class="up">▲ 21,847.50 +0.83%</span></span>
-                <span class="ticker-item">XAUUSD <span class="down">▼ 3,298.10 -0.21%</span></span>
-                <span class="ticker-item">SPX500 <span class="up">▲ 5,912.30 +0.54%</span></span>
-                <span class="ticker-item">DXY <span class="down">▼ 104.21 -0.12%</span></span>
-                <span class="ticker-item">VIX <span class="up">▲ 16.44 +1.2%</span></span>
+                <!-- Se rellena con JS en tiempo real -->
+                <span class="ticker-item" id="tick-NQ">NQ100 <span>Cargando...</span></span>
+                <span class="ticker-item" id="tick-XAU">XAUUSD <span>Cargando...</span></span>
+                <span class="ticker-item" id="tick-SPX">SPX500 <span>Cargando...</span></span>
+                <span class="ticker-item" id="tick-DXY">DXY <span>Cargando...</span></span>
+                <span class="ticker-item" id="tick-VIX">VIX <span>Cargando...</span></span>
+                <span class="ticker-item" id="tick-NQ2">NQ100 <span>—</span></span>
+                <span class="ticker-item" id="tick-XAU2">XAUUSD <span>—</span></span>
+                <span class="ticker-item" id="tick-SPX2">SPX500 <span>—</span></span>
+                <span class="ticker-item" id="tick-DXY2">DXY <span>—</span></span>
+                <span class="ticker-item" id="tick-VIX2">VIX <span>—</span></span>
             </div>
         </div>
     </div>
@@ -666,7 +667,7 @@
                 <p class="section-sub">La preservación del capital es nuestra prioridad número uno. Diseñados para superar auditorías de fondeo.</p>
                 <ul class="risk-list">
                     <li>Sistema estrictamente No Martingala — sin duplicación de lotes tras pérdida</li>
-                    <li>Riesgo máximo por operación configurable (por defecto 1-2% del capital)</li>
+                    <li>Riesgo máximo por operación fijado en el 1% del capital — conservador y consistente</li>
                     <li>Stop Loss obligatorio en cada operación abierta, sin excepciones</li>
                     <li>Filtro de noticias: pausa automática 30 min antes/después de datos de alto impacto</li>
                     <li>Límite de drawdown diario: el bot se detiene automáticamente al alcanzar el umbral</li>
@@ -677,12 +678,12 @@
                 <h4>// Parámetros de Control</h4>
                 <div class="risk-metrics">
                     <div class="metric-row">
-                        <div class="metric-top"><span class="metric-name">Riesgo por Operación</span><span class="metric-val">1-2%</span></div>
-                        <div class="metric-bar"><div class="metric-fill" style="width:20%"></div></div>
+                        <div class="metric-top"><span class="metric-name">Riesgo por Operación</span><span class="metric-val">1%</span></div>
+                        <div class="metric-bar"><div class="metric-fill" style="width:10%"></div></div>
                     </div>
                     <div class="metric-row">
-                        <div class="metric-top"><span class="metric-name">Drawdown Máximo Diario</span><span class="metric-val">5%</span></div>
-                        <div class="metric-bar"><div class="metric-fill" style="width:50%"></div></div>
+                        <div class="metric-top"><span class="metric-name">Drawdown Máximo Diario</span><span class="metric-val">0.50%</span></div>
+                        <div class="metric-bar"><div class="metric-fill" style="width:5%"></div></div>
                     </div>
                     <div class="metric-row">
                         <div class="metric-top"><span class="metric-name">Stop Loss Dinámico (ATR)</span><span class="metric-val">Activo</span></div>
@@ -800,7 +801,70 @@
     </div>
 
     <script>
-        // Custom cursor
+        /* ══════════════════════════════════════════════
+           PRECIOS EN TIEMPO REAL — Finnhub API
+           Clave pública gratuita (60 llamadas/min)
+           Para obtener la tuya: https://finnhub.io/register
+        ══════════════════════════════════════════════ */
+        const FINNHUB_KEY = 'd6q229hr01qhcrmij57gd6q229hr01qhcrmij580';
+
+        // Mapa: [idHTML, símbolo Finnhub, nombre display, decimales]
+        const SYMBOLS = [
+            ['NQ',  'OANDA:NAS100_USD', 'NQ100',  2],
+            ['XAU', 'OANDA:XAU_USD',    'XAUUSD', 2],
+            ['SPX', 'OANDA:SPX500_USD', 'SPX500', 2],
+            ['DXY', 'OANDA:US30_USD',   'US30',   2],
+            ['VIX', 'CBOE:VIX',         'VIX',    2],
+        ];
+
+        // Cache de precios previos para calcular % cambio intradía
+        const prevPrices = {};
+
+        function fmt(num, dec) {
+            return num.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+        }
+
+        function renderTick(id, name, price, pct) {
+            const up = pct >= 0;
+            const arrow = up ? '▲' : '▼';
+            const cls = up ? 'up' : 'down';
+            const html = `${name} <span class="${cls}">${arrow} ${fmt(price,2)} ${up?'+':''}${pct.toFixed(2)}%</span>`;
+            const el1 = document.getElementById('tick-' + id);
+            const el2 = document.getElementById('tick-' + id + '2');
+            if (el1) el1.innerHTML = html;
+            if (el2) el2.innerHTML = html;
+        }
+
+        async function fetchQuote(sym) {
+            const url = `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(sym)}&token=${FINNHUB_KEY}`;
+            const r = await fetch(url);
+            return r.json();
+        }
+
+        async function updatePrices() {
+            for (const [id, sym, name, dec] of SYMBOLS) {
+                try {
+                    const data = await fetchQuote(sym);
+                    // data.c = precio actual, data.pc = cierre anterior
+                    if (data && data.c && data.c > 0) {
+                        const pct = ((data.c - data.pc) / data.pc) * 100;
+                        renderTick(id, name, data.c, pct);
+                    }
+                } catch(e) {
+                    console.warn('Error fetching', sym, e);
+                }
+                // Pequeña pausa entre llamadas para no sobrepasar el rate limit
+                await new Promise(r => setTimeout(r, 300));
+            }
+        }
+
+        // Primera carga inmediata, luego cada 30 segundos
+        updatePrices();
+        setInterval(updatePrices, 30000);
+
+        /* ══════════════════════════════════════════════
+           CURSOR PERSONALIZADO
+        ══════════════════════════════════════════════ */
         const cursor = document.getElementById('cursor');
         const ring = document.getElementById('cursorRing');
         let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
@@ -822,7 +886,9 @@
             el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
         });
 
-        // Counter animation
+        /* ══════════════════════════════════════════════
+           CONTADORES ANIMADOS
+        ══════════════════════════════════════════════ */
         function animateCounters() {
             document.querySelectorAll('[data-target]').forEach(el => {
                 const target = parseFloat(el.dataset.target);
@@ -842,7 +908,9 @@
         }, { threshold: 0.5 });
         heroObserver.observe(document.querySelector('.hero-stats'));
 
-        // FAQ
+        /* ══════════════════════════════════════════════
+           FAQ ACORDEÓN
+        ══════════════════════════════════════════════ */
         function toggleFaq(btn) {
             const answer = btn.nextElementSibling;
             const isOpen = answer.classList.contains('open');
@@ -851,7 +919,9 @@
             if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
         }
 
-        // Scroll reveal
+        /* ══════════════════════════════════════════════
+           SCROLL REVEAL
+        ══════════════════════════════════════════════ */
         const revealObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
