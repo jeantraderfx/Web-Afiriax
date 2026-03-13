@@ -3,32 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AfiriaxCapital | Bots para Nasdaq y Oro</title>
+    <title>AfiriaxCapital | Algoritmos de Alta Precisión</title>
     <style>
-        :root { --verde: #76ff03; --fondo: #0a0a0a; --tarjeta: #1a1a1a; }
-        body { font-family: sans-serif; margin: 0; background: var(--fondo); color: white; text-align: center; }
-        nav { padding: 20px; border-bottom: 1px solid #333; font-weight: bold; font-size: 1.2rem; }
-        span { color: var(--verde); }
-        .hero { padding: 100px 20px; background: radial-gradient(circle, #1a3311 0%, #0a0a0a 70%); }
-        h1 { font-size: 3rem; text-transform: uppercase; }
-        .btn { display: inline-block; padding: 15px 30px; background: var(--verde); color: black; 
-               text-decoration: none; border-radius: 50px; font-weight: bold; margin-top: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 50px 10%; }
-        .card { background: var(--tarjeta); padding: 30px; border-radius: 15px; border: 1px solid #333; }
-        .card h3 { color: var(--verde); }
+        :root { --verde: #76ff03; --fondo: #050505; --tarjeta: #111111; --texto-gris: #aaa; }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; background: var(--fondo); color: white; line-height: 1.6; scroll-behavior: smooth; }
+        
+        /* NAVEGACIÓN */
+        nav { padding: 20px 10%; background: rgba(0,0,0,0.95); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; }
+        .logo span { color: var(--verde); }
+        .menu a { color: white; text-decoration: none; margin-left: 20px; font-size: 0.9rem; text-transform: uppercase; transition: 0.3s; }
+        .menu a:hover { color: var(--verde); }
+
+        /* HERO */
+        .hero { padding: 140px 20px; text-align: center; background: radial-gradient(circle at center, #142b08 0%, #050505 80%); }
+        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); margin: 0; text-transform: uppercase; font-weight: 900; line-height: 1; }
+        h1 span { color: var(--verde); text-shadow: 0 0 30px rgba(118, 255, 3, 0.5); }
+        .hero p { font-size: 1.2rem; color: var(--texto-gris); max-width: 700px; margin: 30px auto; }
+
+        /* BOTONES */
+        .btn { display: inline-block; padding: 18px 40px; background: var(--verde); color: black; text-decoration: none; border-radius: 5px; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(118, 255, 3, 0.4); }
+
+        /* SECCIÓN INFO TÉCNICA */
+        .section { padding: 80px 10%; }
+        .section h2 { font-size: 2.5rem; text-align: center; margin-bottom: 50px; text-transform: uppercase; }
+        .section h2 span { color: var(--verde); }
+        
+        .grid-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .feature-card { background: var(--tarjeta); padding: 35px; border-radius: 10px; border-left: 4px solid var(--verde); }
+        .feature-card h3 { margin-top: 0; color: var(--verde); font-size: 1.4rem; }
+        .feature-card p { color: #ddd; font-size: 0.95rem; }
+
+        /* GESTIÓN DE RIESGO */
+        .risk-box { background: linear-gradient(90deg, #111, #1a1a1a); padding: 40px; border-radius: 15px; border: 1px dashed var(--verde); text-align: center; margin-top: 40px; }
+
+        /* FOOTER */
+        footer { padding: 60px; text-align: center; color: #444; border-top: 1px solid #222; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-    <nav>AFIRIAX<span>CAPITAL</span></nav>
+
+    <nav>
+        <div class="logo">AFIRIAX<span>CAPITAL</span></div>
+        <div class="menu">
+            <a href="#tecnologia">Tecnología</a>
+            <a href="#plataformas">Plataformas</a>
+            <a href="#contacto">Contacto</a>
+        </div>
+    </nav>
+
     <header class="hero">
-        <h1>Dominando <span>Nasdaq & Oro</span></h1>
-        <p>Bots de alta precisión para MT5, TradingView y cTrader.</p>
-        <a href="#" class="btn">SOLICITAR ACCESO</a>
+        <h1>Trading de <span>Alta Frecuencia</span></h1>
+        <p>Especialistas en algoritmos avanzados para la máxima rentabilidad en <strong>NASDAQ 100</strong> y <strong>ORO (XAUUSD)</strong>. Ejecución institucional al alcance de tu mano.</p>
+        <a href="https://t.me/TuUsuario" class="btn">Solicitar Acceso VIP</a>
     </header>
-    <section class="grid">
-        <div class="card"><h3>MetaTrader 5</h3><p>EAs para Nasdaq.</p></div>
-        <div class="card"><h3>TradingView</h3><p>Alertas para Oro.</p></div>
-        <div class="card"><h3>cTrader</h3><p>cBots profesionales.</p></div>
+
+    <section id="tecnologia" class="section">
+        <h2>Por qué <span>AfiriaxCapital</span></h2>
+        <div class="grid-features">
+            <div class="feature-card">
+                <h3>Análisis de Volatilidad</h3>
+                <p>Nuestros bots detectan patrones de liquidez en tiempo real, entrando en los puntos de inflexión del Nasdaq y el Oro.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Zero Latency</h3>
+                <p>Código optimizado para MT5 y cTrader, garantizando que tus órdenes se ejecuten al precio exacto, sin slippage excesivo.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Smart Risk Management</h3>
+                <p>Cada bot incluye Stop Loss dinámico, Take Profit inteligente y un sistema de protección de capital automático.</p>
+            </div>
+        </div>
+
+        <div class="risk-box">
+            <h3>🛡️ Seguridad y Control</h3>
+            <p>Nuestros sistemas NO utilizan Martingala ni estrategias de alto riesgo. Priorizamos la preservación de tu cuenta por encima de todo.</p>
+        </div>
     </section>
+
+    <section id="plataformas" class="section" style="background: #080808;">
+        <h2>Compatibilidad <span>Total</span></h2>
+        <div class="grid-features">
+            <div class="feature-card" style="border-left-color: #fff;">
+                <h3>MT5 / MetaTrader</h3>
+                <p>Expert Advisors (EA) robustos para cuentas de fondeo o capital propio.</p>
+            </div>
+            <div class="feature-card" style="border-left-color: #41b883;">
+                <h3>TradingView</h3>
+                <p>Estrategias en Pine Script con alertas directas a tu móvil o servidor.</p>
+            </div>
+            <div class="feature-card" style="border-left-color: #3e7fb2;">
+                <h3>cTrader</h3>
+                <p>cBots escritos en C# para usuarios que buscan precisión institucional.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <p>ADVERTENCIA: El trading conlleva riesgos. Los resultados pasados no garantizan beneficios futuros.</p>
+        <p>&copy; 2026 AfiriaxCapital.com | Todos los derechos reservados.</p>
+    </footer>
+
 </body>
 </html>
