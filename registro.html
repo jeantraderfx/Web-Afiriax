@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - AfriaxCapital</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f4f4f4; }
+        .card { background: white; padding: 20px; border-radius: 8px; shadow: 0 2px 5px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBRfSSfxaNcZ3YIhttSJb0W8V9hu-JGur8",
+            authDomain: "afriaxcapital-f4c63.firebaseapp.com",
+            projectId: "afriaxcapital-f4c63",
+            storageBucket: "afriaxcapital-f4c63.firebasestorage.app",
+            messagingSenderId: "661164998506",
+            appId: "1:661164998506:web:d357357f57110ab43b2f13"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.registrar = async () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            const nombre = document.getElementById('nombre').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                await sendEmailVerification(userCredential.user);
+                await setDoc(doc(db, "usuarios", userCredential.user.uid), {
+                    nombre: nombre,
+                    email: email,
+                    estado: "pendiente",
+                    ids_trading: []
+                });
+                alert("¡Registro casi listo! Revisa tu email para verificarlo. Luego espera la aprobación del admin.");
+                window.location.href = "dashboard.html";
+            } catch (e) { alert("Error: " + e.message); }
+        };
+    </script>
+</head>
+<body>
+    <div class="card">
+        <h2>Únete a Afriax</h2>
+        <input type="text" id="nombre" placeholder="Nombre completo">
+        <input type="email" id="email" placeholder="Tu Correo">
+        <input type="password" id="pass" placeholder="Crea una contraseña">
+        <button onclick="registrar()">Crear Cuenta</button>
+        <p><a href="dashboard.html">Ya tengo cuenta</a></p>
+    </div>
+</body>
+</html>
