@@ -479,34 +479,77 @@
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursorRing"></div>
 
-    <!-- TICKER FIJO CENTRADO -->
-    <div class="ticker-bar" style="background:#000; border-bottom:1px solid #1e1e1e; height:46px; display:flex; align-items:center; justify-content:center; gap:0;">
-        <div class="tradingview-widget-container" style="width:320px; height:46px; flex-shrink:0;">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
-            {
-                "symbol": "BLACKBULL:NAS100",
-                "width": 320,
-                "colorTheme": "dark",
-                "isTransparent": true,
-                "locale": "es"
-            }
-            </script>
+    <!-- TICKER FIJO CENTRADO COMPACTO -->
+    <div style="background:#000; border-bottom:1px solid #1e1e1e; height:38px; display:flex; align-items:center; justify-content:center; gap:32px;">
+        
+        <!-- NAS100 -->
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Space Mono',monospace; font-size:0.62rem; color:#555; letter-spacing:2px; text-transform:uppercase;">NAS100</span>
+            <span id="nas-price" style="font-family:'Space Mono',monospace; font-size:0.78rem; color:#f0f0f0; font-weight:700;">—</span>
+            <span id="nas-chg" style="font-family:'Space Mono',monospace; font-size:0.65rem; color:#555;">—</span>
         </div>
-        <div style="width:1px; height:24px; background:#1e1e1e; flex-shrink:0;"></div>
-        <div class="tradingview-widget-container" style="width:320px; height:46px; flex-shrink:0;">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
-            {
-                "symbol": "TVC:GOLD",
-                "width": 320,
-                "colorTheme": "dark",
-                "isTransparent": true,
-                "locale": "es"
-            }
-            </script>
+
+        <div style="width:1px; height:16px; background:#222;"></div>
+
+        <!-- GOLD -->
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-family:'Space Mono',monospace; font-size:0.62rem; color:#555; letter-spacing:2px; text-transform:uppercase;">XAU/USD</span>
+            <span id="xau-price" style="font-family:'Space Mono',monospace; font-size:0.78rem; color:#f0f0f0; font-weight:700;">—</span>
+            <span id="xau-chg" style="font-family:'Space Mono',monospace; font-size:0.65rem; color:#555;">—</span>
+        </div>
+
+        <!-- Widget oculto NAS100 -->
+        <div style="position:absolute; opacity:0; pointer-events:none; width:1px; height:1px; overflow:hidden;">
+            <div id="tv-nas" class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+                {"symbol":"BLACKBULL:NAS100","width":200,"colorTheme":"dark","isTransparent":true,"locale":"en"}
+                </script>
+            </div>
+            <div id="tv-xau" class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+                {"symbol":"TVC:GOLD","width":200,"colorTheme":"dark","isTransparent":true,"locale":"en"}
+                </script>
+            </div>
         </div>
     </div>
+
+    <script>
+    // Extrae precio y cambio de los widgets ocultos de TradingView
+    function parseTVWidget(containerId, priceElId, chgElId) {
+        const check = setInterval(() => {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const iframe = container.querySelector('iframe');
+            if (!iframe) return;
+            // Los widgets tardan ~2s en cargar, leemos el título del iframe
+            try {
+                const title = iframe.title || iframe.getAttribute('title') || '';
+                // Formato típico: "BLACKBULL:NAS100, 19823.4, +0.42%"
+                const parts = title.split(',').map(s => s.trim());
+                if (parts.length >= 3) {
+                    const price = parts[1];
+                    const chg   = parts[2];
+                    const up    = !chg.startsWith('-');
+                    document.getElementById(priceElId).textContent = price;
+                    const chgEl = document.getElementById(chgElId);
+                    chgEl.textContent = (up ? '▲ ' : '▼ ') + chg;
+                    chgEl.style.color = up ? '#76ff03' : '#ff3b3b';
+                    clearInterval(check);
+                }
+            } catch(e) {}
+        }, 500);
+        // Timeout tras 10s — dejamos los guiones
+        setTimeout(() => clearInterval(check), 10000);
+    }
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            parseTVWidget('tv-nas', 'nas-price', 'nas-chg');
+            parseTVWidget('tv-xau', 'xau-price', 'xau-chg');
+        }, 2000);
+    });
+    </script>
 
     <!-- NAV -->
     <nav>
