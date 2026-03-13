@@ -3,136 +3,869 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AfiriaxCapital | Algoritmos de Alta Precisión | Nasdaq & Oro</title>
+    <title>AfiriaxCapital | Algoritmos de Alta Frecuencia | Nasdaq & Oro</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --verde: #76ff03; 
-            --fondo: #050505; 
-            --tarjeta: #111111; 
-            --texto-p: #ffffff;
-            --texto-s: #aaaaaa;
+        :root {
+            --verde: #76ff03;
+            --verde-dim: rgba(118, 255, 3, 0.12);
+            --verde-glow: rgba(118, 255, 3, 0.4);
+            --fondo: #040404;
+            --tarjeta: #0c0c0c;
+            --tarjeta-hover: #141414;
+            --borde: #1e1e1e;
+            --texto: #f0f0f0;
+            --texto-s: #888;
+            --oro: #d4a847;
         }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; background: var(--fondo); color: var(--texto-p); 
-            line-height: 1.6; scroll-behavior: smooth;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--fondo);
+            color: var(--texto);
+            overflow-x: hidden;
         }
 
-        /* NAVEGACIÓN */
-        nav { 
-            padding: 15px 10%; background: rgba(0,0,0,0.95); 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000;
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--fondo); }
+        ::-webkit-scrollbar-thumb { background: var(--verde); border-radius: 2px; }
+
+        /* ── CURSOR ── */
+        .cursor {
+            width: 10px; height: 10px;
+            background: var(--verde);
+            border-radius: 50%;
+            position: fixed; pointer-events: none;
+            z-index: 9999; transition: transform 0.15s ease;
+            mix-blend-mode: difference;
         }
-        .logo-container img { height: 55px; width: auto; display: block; }
-        .menu a { color: var(--texto-p); text-decoration: none; margin-left: 25px; font-size: 0.9rem; text-transform: uppercase; font-weight: 600; transition: 0.3s; }
-        .menu a:hover { color: var(--verde); }
-
-        /* HERO */
-        .hero { 
-            padding: 140px 20px; text-align: center; 
-            background: radial-gradient(circle at center, #1a3311 0%, #050505 80%); 
-        }
-        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); margin: 0; text-transform: uppercase; font-weight: 900; line-height: 1; }
-        h1 span { color: var(--verde); text-shadow: 0 0 30px rgba(118, 255, 3, 0.5); }
-        .hero p { font-size: 1.2rem; color: var(--texto-s); max-width: 750px; margin: 30px auto; }
-
-        /* BOTONES */
-        .btn { 
-            display: inline-block; padding: 18px 45px; background: var(--verde); 
-            color: #000; text-decoration: none; border-radius: 5px; 
-            font-weight: 800; text-transform: uppercase; transition: 0.3s; 
-            box-shadow: 0 5px 15px rgba(118, 255, 3, 0.2);
-        }
-        .btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 30px rgba(118, 255, 3, 0.4); }
-
-        /* SECCIONES */
-        .section { padding: 80px 10%; }
-        .section h2 { font-size: 2.5rem; text-align: center; margin-bottom: 50px; text-transform: uppercase; }
-        .section h2 span { color: var(--verde); }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--tarjeta); padding: 35px; border-radius: 10px; border-left: 4px solid var(--verde); transition: 0.3s; }
-        .card:hover { border-color: white; transform: translateY(-5px); }
-        .card h3 { color: var(--verde); margin-top: 0; font-size: 1.4rem; }
-
-        /* RIESGO */
-        .risk-box { 
-            background: linear-gradient(90deg, #111, #1a1a1a); padding: 40px; 
-            border-radius: 15px; border: 1px dashed var(--verde); 
-            text-align: center; margin-top: 40px; 
+        .cursor-ring {
+            width: 36px; height: 36px;
+            border: 1px solid var(--verde);
+            border-radius: 50%;
+            position: fixed; pointer-events: none;
+            z-index: 9998; transition: all 0.25s ease;
+            opacity: 0.5;
         }
 
-        /* FOOTER */
-        footer { padding: 60px 10%; text-align: center; color: #555; border-top: 1px solid #222; }
-        .warning { font-size: 0.8rem; max-width: 700px; margin: 0 auto 20px; line-height: 1.4; }
+        /* ── NAV ── */
+        nav {
+            padding: 0 8%;
+            height: 70px;
+            background: rgba(4,4,4,0.92);
+            backdrop-filter: blur(20px);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--borde);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo-text {
+            font-size: 1.3rem; font-weight: 900; letter-spacing: -0.5px;
+            color: var(--texto);
+        }
+        .logo-text span { color: var(--verde); }
+        .logo-container img { height: 42px; width: auto; display: block; }
+        .menu { display: flex; align-items: center; gap: 8px; }
+        .menu a {
+            color: var(--texto-s); text-decoration: none;
+            font-size: 0.78rem; text-transform: uppercase;
+            font-weight: 700; letter-spacing: 1.5px;
+            padding: 8px 16px; border-radius: 4px;
+            transition: 0.25s;
+        }
+        .menu a:hover { color: var(--verde); background: var(--verde-dim); }
+        .menu .btn-nav {
+            background: var(--verde); color: #000;
+            padding: 9px 22px; border-radius: 4px;
+            font-weight: 800;
+        }
+        .menu .btn-nav:hover { background: #fff; color: #000; }
+
+        /* ── TICKER ── */
+        .ticker-bar {
+            background: #000; border-bottom: 1px solid var(--borde);
+            overflow: hidden; height: 36px; display: flex; align-items: center;
+        }
+        .ticker-label {
+            background: var(--verde); color: #000;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem; font-weight: 700;
+            padding: 0 14px; height: 100%;
+            display: flex; align-items: center;
+            white-space: nowrap; flex-shrink: 0;
+            letter-spacing: 1px;
+        }
+        .ticker-track {
+            display: flex; animation: ticker 28s linear infinite; align-items: center;
+        }
+        .ticker-item {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem; padding: 0 40px;
+            white-space: nowrap; color: var(--texto-s);
+        }
+        .ticker-item .up { color: var(--verde); }
+        .ticker-item .down { color: #ff3b3b; }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 60px 8%;
+            position: relative; overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 40%, rgba(118,255,3,0.07) 0%, transparent 70%),
+                repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(118,255,3,0.03) 80px),
+                repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(118,255,3,0.03) 80px);
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--verde-dim); border: 1px solid rgba(118,255,3,0.25);
+            color: var(--verde); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            padding: 8px 18px; border-radius: 100px;
+            margin-bottom: 32px;
+            animation: fadeUp 0.6s ease both;
+        }
+        .hero-badge::before {
+            content: ''; width: 6px; height: 6px; background: var(--verde);
+            border-radius: 50%; animation: pulse 1.5s ease infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900; line-height: 0.95;
+            letter-spacing: -3px; text-transform: uppercase;
+            margin-bottom: 28px;
+            animation: fadeUp 0.6s 0.1s ease both;
+        }
+        .hero h1 em { font-style: normal; color: var(--verde); display: block; }
+        .hero p {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            color: var(--texto-s); max-width: 640px;
+            margin: 0 auto 40px;
+            animation: fadeUp 0.6s 0.2s ease both;
+            line-height: 1.7;
+        }
+        .hero-btns {
+            display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+            animation: fadeUp 0.6s 0.3s ease both;
+        }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 16px 38px; background: var(--verde);
+            color: #000; text-decoration: none; border-radius: 5px;
+            font-weight: 800; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 1px; transition: 0.25s;
+            box-shadow: 0 0 40px rgba(118,255,3,0.2);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 60px rgba(118,255,3,0.4); background: #fff; }
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 16px 38px; background: transparent;
+            color: var(--texto); text-decoration: none; border-radius: 5px;
+            font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 1px; border: 1px solid var(--borde); transition: 0.25s;
+        }
+        .btn-secondary:hover { border-color: var(--verde); color: var(--verde); background: var(--verde-dim); }
+
+        .hero-stats {
+            display: flex; gap: 50px; flex-wrap: wrap; justify-content: center;
+            margin-top: 70px;
+            padding-top: 50px;
+            border-top: 1px solid var(--borde);
+            width: 100%; max-width: 800px;
+            animation: fadeUp 0.6s 0.4s ease both;
+        }
+        .stat { text-align: center; }
+        .stat-num {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700; color: var(--verde);
+            display: block;
+        }
+        .stat-label { font-size: 0.72rem; color: var(--texto-s); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+
+        @keyframes fadeUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+
+        /* ── SECCIÓN GENÉRICA ── */
+        .section { padding: 100px 8%; }
+        .section-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 4px;
+            color: var(--verde); text-transform: uppercase; margin-bottom: 14px;
+        }
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 900; text-transform: uppercase;
+            letter-spacing: -1.5px; line-height: 1;
+            margin-bottom: 20px;
+        }
+        .section-title span { color: var(--verde); }
+        .section-sub {
+            color: var(--texto-s); font-size: 1.05rem;
+            max-width: 520px; line-height: 1.7;
+        }
+        .section-header { margin-bottom: 60px; }
+
+        /* ── CÓMO FUNCIONA ── */
+        .how-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background: var(--borde);
+            border: 1px solid var(--borde);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .how-item {
+            background: var(--fondo);
+            padding: 48px;
+            position: relative;
+            transition: 0.3s;
+        }
+        .how-item:hover { background: var(--tarjeta); }
+        .how-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem; color: var(--verde);
+            letter-spacing: 3px; margin-bottom: 20px;
+            display: block;
+        }
+        .how-item h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 14px; }
+        .how-item p { color: var(--texto-s); line-height: 1.7; font-size: 0.95rem; }
+
+        /* ── TECNOLOGÍA ── */
+        .tech-section { background: var(--tarjeta); }
+        .tech-cols {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+        }
+        .tech-visual {
+            position: relative; height: 420px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .tech-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(118,255,3,0.15);
+            animation: spin linear infinite;
+        }
+        .ring-1 { width: 320px; height: 320px; animation-duration: 18s; border-color: rgba(118,255,3,0.2); }
+        .ring-2 { width: 240px; height: 240px; animation-duration: 12s; animation-direction: reverse; }
+        .ring-3 { width: 160px; height: 160px; animation-duration: 8s; }
+        @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        .ring-dot {
+            position: absolute; top: -4px; left: calc(50% - 4px);
+            width: 8px; height: 8px; background: var(--verde); border-radius: 50%;
+            box-shadow: 0 0 12px var(--verde);
+        }
+        .tech-core {
+            width: 90px; height: 90px;
+            background: var(--verde-dim); border: 1px solid rgba(118,255,3,0.3);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Space Mono', monospace; font-size: 0.6rem;
+            color: var(--verde); letter-spacing: 1px; text-align: center;
+            z-index: 2;
+        }
+        .tech-pills { display: flex; flex-direction: column; gap: 14px; }
+        .pill {
+            display: flex; align-items: center; gap: 16px;
+            background: var(--fondo); border: 1px solid var(--borde);
+            padding: 16px 22px; border-radius: 8px; transition: 0.25s;
+        }
+        .pill:hover { border-color: var(--verde); background: var(--verde-dim); }
+        .pill-icon {
+            width: 36px; height: 36px; background: var(--verde-dim);
+            border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
+        }
+        .pill-text { font-size: 0.9rem; font-weight: 700; }
+        .pill-sub { font-size: 0.78rem; color: var(--texto-s); margin-top: 2px; }
+
+        /* ── INSTRUMENTOS ── */
+        .inst-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .inst-card {
+            background: var(--tarjeta); border: 1px solid var(--borde);
+            border-radius: 12px; padding: 40px; transition: 0.3s; position: relative;
+            overflow: hidden;
+        }
+        .inst-card::before {
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+            opacity: 0.05; transition: 0.4s;
+        }
+        .inst-card.nasdaq::before { background: #2196f3; }
+        .inst-card.gold::before { background: var(--oro); }
+        .inst-card:hover { border-color: var(--verde); transform: translateY(-6px); }
+        .inst-card:hover::before { opacity: 0.12; }
+        .inst-icon { font-size: 2.5rem; margin-bottom: 20px; }
+        .inst-card h3 { font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; }
+        .inst-ticker {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem; color: var(--texto-s); letter-spacing: 2px;
+            margin-bottom: 18px;
+        }
+        .inst-card p { color: var(--texto-s); line-height: 1.7; font-size: 0.92rem; margin-bottom: 24px; }
+        .inst-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 1px;
+            background: var(--verde-dim); color: var(--verde);
+            border: 1px solid rgba(118,255,3,0.2);
+            padding: 5px 12px; border-radius: 100px;
+        }
+
+        /* ── PLATAFORMAS ── */
+        .plat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .plat-card {
+            background: var(--tarjeta); border: 1px solid var(--borde);
+            border-radius: 12px; padding: 36px; text-align: center; transition: 0.3s;
+        }
+        .plat-card:hover { border-color: var(--verde); background: var(--tarjeta-hover); transform: translateY(-4px); }
+        .plat-logo {
+            width: 56px; height: 56px; border-radius: 12px;
+            background: var(--verde-dim); display: flex; align-items: center;
+            justify-content: center; font-size: 1.6rem; margin: 0 auto 20px;
+        }
+        .plat-card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 10px; }
+        .plat-card p { color: var(--texto-s); font-size: 0.88rem; line-height: 1.6; }
+        .plat-badge {
+            display: inline-block; margin-top: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.62rem; letter-spacing: 1.5px;
+            color: var(--verde); background: var(--verde-dim);
+            padding: 4px 10px; border-radius: 4px;
+        }
+
+        /* ── RIESGO ── */
+        .risk-section {
+            background: var(--tarjeta);
+            border-top: 1px solid var(--borde);
+            border-bottom: 1px solid var(--borde);
+        }
+        .risk-inner {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+        }
+        .risk-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 30px; }
+        .risk-list li {
+            display: flex; align-items: flex-start; gap: 14px;
+            font-size: 0.95rem; color: var(--texto-s); line-height: 1.5;
+        }
+        .risk-list li::before {
+            content: '✓'; color: var(--verde);
+            font-family: 'Space Mono', monospace; font-weight: 700;
+            flex-shrink: 0; margin-top: 2px;
+        }
+        .risk-card-big {
+            background: var(--fondo); border: 1px solid var(--borde);
+            border-radius: 14px; padding: 40px;
+        }
+        .risk-card-big h4 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem; color: var(--verde); letter-spacing: 3px;
+            text-transform: uppercase; margin-bottom: 20px;
+        }
+        .risk-metrics { display: flex; flex-direction: column; gap: 16px; }
+        .metric-row { display: flex; flex-direction: column; gap: 6px; }
+        .metric-top { display: flex; justify-content: space-between; font-size: 0.82rem; }
+        .metric-name { color: var(--texto-s); }
+        .metric-val { color: var(--verde); font-family: 'Space Mono', monospace; font-weight: 700; }
+        .metric-bar { height: 4px; background: var(--borde); border-radius: 2px; overflow: hidden; }
+        .metric-fill { height: 100%; background: var(--verde); border-radius: 2px; }
+
+        /* ── FAQ ── */
+        .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 2px; }
+        .faq-item {
+            background: var(--tarjeta); border: 1px solid var(--borde);
+            border-radius: 8px; overflow: hidden;
+        }
+        .faq-q {
+            width: 100%; background: none; border: none; color: var(--texto);
+            text-align: left; padding: 22px 26px;
+            font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            gap: 16px; transition: 0.2s;
+        }
+        .faq-q:hover { color: var(--verde); }
+        .faq-q .faq-arrow { flex-shrink: 0; color: var(--verde); font-size: 1.2rem; transition: 0.3s; }
+        .faq-q.open .faq-arrow { transform: rotate(45deg); }
+        .faq-a {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 26px;
+            color: var(--texto-s); font-size: 0.92rem; line-height: 1.7;
+        }
+        .faq-a.open { max-height: 300px; padding: 0 26px 22px; }
+
+        /* ── CTA FINAL ── */
+        .cta-section {
+            padding: 120px 8%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(118,255,3,0.06) 0%, transparent 70%);
+        }
+        .cta-section h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900; text-transform: uppercase;
+            letter-spacing: -2px; margin-bottom: 20px; line-height: 1;
+        }
+        .cta-section h2 span { color: var(--verde); }
+        .cta-section p { color: var(--texto-s); font-size: 1.1rem; max-width: 480px; margin: 0 auto 40px; }
+        .cta-contact {
+            display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 50px;
+        }
+        .contact-line {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem; color: var(--texto-s); letter-spacing: 2px;
+        }
+        .contact-line a { color: var(--verde); text-decoration: none; }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 50px 8%;
+            border-top: 1px solid var(--borde);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;
+        }
+        .footer-brand .logo-text { font-size: 1.1rem; margin-bottom: 12px; }
+        .footer-brand p { font-size: 0.82rem; color: var(--texto-s); line-height: 1.6; max-width: 380px; }
+        .footer-right { text-align: right; }
+        .footer-links { display: flex; gap: 20px; justify-content: flex-end; margin-bottom: 16px; }
+        .footer-links a { color: var(--texto-s); text-decoration: none; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+        .footer-links a:hover { color: var(--verde); }
+        .footer-copy { font-size: 0.75rem; color: #444; }
+        .warning-bar {
+            background: #0a0a0a; border-top: 1px solid var(--borde);
+            padding: 16px 8%; text-align: center;
+            font-size: 0.72rem; color: #444; line-height: 1.5;
+        }
+        .warning-bar strong { color: #666; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .how-grid { grid-template-columns: 1fr; }
+            .tech-cols { grid-template-columns: 1fr; }
+            .tech-visual { display: none; }
+            .inst-grid { grid-template-columns: 1fr; }
+            .plat-grid { grid-template-columns: 1fr; }
+            .risk-inner { grid-template-columns: 1fr; }
+            footer { grid-template-columns: 1fr; }
+            .footer-right { text-align: left; }
+            .footer-links { justify-content: flex-start; }
+            nav { padding: 0 5%; }
+            .section { padding: 70px 5%; }
+            .menu a:not(.btn-nav) { display: none; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- TICKER -->
+    <div class="ticker-bar">
+        <div class="ticker-label">LIVE MARKETS</div>
+        <div style="overflow:hidden;flex:1;display:flex;align-items:center;">
+            <div class="ticker-track" id="tickerTrack">
+                <span class="ticker-item">NQ100 <span class="up">▲ 21,847.50 +0.83%</span></span>
+                <span class="ticker-item">XAUUSD <span class="down">▼ 3,298.10 -0.21%</span></span>
+                <span class="ticker-item">SPX500 <span class="up">▲ 5,912.30 +0.54%</span></span>
+                <span class="ticker-item">DXY <span class="down">▼ 104.21 -0.12%</span></span>
+                <span class="ticker-item">VIX <span class="up">▲ 16.44 +1.2%</span></span>
+                <span class="ticker-item">NQ100 <span class="up">▲ 21,847.50 +0.83%</span></span>
+                <span class="ticker-item">XAUUSD <span class="down">▼ 3,298.10 -0.21%</span></span>
+                <span class="ticker-item">SPX500 <span class="up">▲ 5,912.30 +0.54%</span></span>
+                <span class="ticker-item">DXY <span class="down">▼ 104.21 -0.12%</span></span>
+                <span class="ticker-item">VIX <span class="up">▲ 16.44 +1.2%</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAV -->
     <nav>
         <div class="logo-container">
-            <img src="logo.png" alt="AfiriaxCapital Logo">
+            <img src="logo.png" alt="AfiriaxCapital" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <div class="logo-text" style="display:none;">Afiriax<span>Capital</span></div>
         </div>
         <div class="menu">
+            <a href="#como-funciona">Cómo Funciona</a>
             <a href="#tecnologia">Tecnología</a>
             <a href="#plataformas">Plataformas</a>
-            <a href="#contacto">Contacto</a>
+            <a href="#faq">FAQ</a>
+            <a href="https://wa.me/34631600506?text=Hola,%20estoy%20interesado%20en%20los%20bots%20de%20AfiriaxCapital" class="btn-nav" target="_blank">Acceso VIP</a>
         </div>
     </nav>
 
+    <!-- HERO -->
     <header class="hero">
-        <h1>Trading de <span>Alta Frecuencia</span></h1>
-        <p>Expertos en algoritmos avanzados para NASDAQ 100 y ORO (XAUUSD). Ejecución institucional diseñada para el trader moderno.</p>
-        <a href="https://wa.me/34631600506?text=Hola,%20estoy%20interesado%20en%20los%20bots%20de%20AfiriaxCapital" class="btn" target="_blank">Solicitar Acceso VIP</a>
+        <div class="hero-bg"></div>
+        <div class="hero-badge">Algoritmos en Producción · 2026</div>
+        <h1>Trading<br><em>Algorítmico</em><br>De Élite</h1>
+        <p>Sistemas de ejecución automática para NASDAQ 100 y Oro (XAUUSD). Tecnología institucional accesible para el trader independiente.</p>
+        <div class="hero-btns">
+            <a href="https://wa.me/34631600506?text=Hola,%20estoy%20interesado%20en%20los%20bots%20de%20AfiriaxCapital" class="btn-primary" target="_blank">
+                Solicitar Acceso VIP →
+            </a>
+            <a href="#como-funciona" class="btn-secondary">
+                Ver Cómo Funciona
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat"><span class="stat-num" data-target="0.8">0</span><div class="stat-label">Ms Latencia</div></div>
+            <div class="stat"><span class="stat-num" data-target="2">0</span><div class="stat-label">Mercados</div></div>
+            <div class="stat"><span class="stat-num" data-target="3">0</span><div class="stat-label">Plataformas</div></div>
+            <div class="stat"><span class="stat-num" data-target="100">0</span><div class="stat-label">% No Martingala</div></div>
+        </div>
     </header>
 
-    <section id="tecnologia" class="section">
-        <h2>Tecnología <span>AfiriaxCapital</span></h2>
-        <div class="grid">
-            <div class="card">
+    <!-- CÓMO FUNCIONA -->
+    <section id="como-funciona" class="section">
+        <div class="section-header">
+            <p class="section-label">// Proceso</p>
+            <h2 class="section-title">¿Cómo <span>Funciona</span>?</h2>
+            <p class="section-sub">Cuatro fases de análisis y ejecución diseñadas para operar en cualquier condición de mercado.</p>
+        </div>
+        <div class="how-grid">
+            <div class="how-item">
+                <span class="how-num">— 01</span>
                 <h3>Análisis de Liquidez</h3>
-                <p>Nuestros bots detectan flujos de órdenes institucionales, entrando en los puntos de inflexión clave del Nasdaq.</p>
+                <p>Los algoritmos escanean continuamente los libros de órdenes para identificar zonas de acumulación institucional. Detectamos impulsión real antes de que el precio reaccione, evitando trampas de liquidez y fakeouts.</p>
             </div>
-            <div class="card">
-                <h3>Zero Latency</h3>
-                <p>Código optimizado para MT5 y cTrader, garantizando que tus órdenes se ejecuten con el mínimo slippage.</p>
+            <div class="how-item">
+                <span class="how-num">— 02</span>
+                <h3>Filtro de Estructura</h3>
+                <p>Validación automática de la tendencia macro (H4/D1) y confirmación en marcos temporales inferiores (M15/H1). Solo se ejecutan operaciones alineadas con el flujo institucional dominante.</p>
             </div>
-            <div class="card">
-                <h3>Smart Risk Management</h3>
-                <p>Stop Loss dinámico y Take Profit inteligente. Gestión de riesgo adaptativa según la volatilidad del Oro.</p>
+            <div class="how-item">
+                <span class="how-num">— 03</span>
+                <h3>Entrada de Alta Precisión</h3>
+                <p>Entradas basadas en rebotes en Order Blocks y Fair Value Gaps validados. El sistema espera confirmación de vela antes de ejecutar, reduciendo el ruido y mejorando la ratio riesgo/beneficio.</p>
             </div>
-        </div>
-
-        <div class="risk-box">
-            <h3>🛡️ Seguridad y Control</h3>
-            <p>Sistemas estrictamente <strong>NO Martingala</strong>. Priorizamos la preservación de capital para superar auditorías y cuentas de fondeo.</p>
+            <div class="how-item">
+                <span class="how-num">— 04</span>
+                <h3>Gestión Dinámica</h3>
+                <p>Stop Loss dinámico que se ajusta en tiempo real a la volatilidad (ATR). Take Profit parcial al primer objetivo y trailing stop activado desde el 50% del recorrido, maximizando capturas de tendencia.</p>
+            </div>
         </div>
     </section>
 
-    <section id="plataformas" class="section" style="background: #080808;">
-        <h2>Compatibilidad <span>Total</span></h2>
-        <div class="grid">
-            <div class="card" style="border-left-color: #fff;">
+    <!-- TECNOLOGÍA -->
+    <section id="tecnologia" class="section tech-section">
+        <div class="tech-cols">
+            <div>
+                <p class="section-label">// Arquitectura</p>
+                <h2 class="section-title">Motor <span>Tecnológico</span></h2>
+                <p class="section-sub" style="margin-bottom:36px;">Código optimizado para entornos de alta velocidad. Cada microsegundo importa en el trading de alta frecuencia.</p>
+                <div class="tech-pills">
+                    <div class="pill">
+                        <div class="pill-icon">⚡</div>
+                        <div>
+                            <div class="pill-text">Zero Latency Engine</div>
+                            <div class="pill-sub">Ejecución en &lt;0.8ms · Conexión directa al broker</div>
+                        </div>
+                    </div>
+                    <div class="pill">
+                        <div class="pill-icon">🧠</div>
+                        <div>
+                            <div class="pill-text">Machine Learning Adaptativo</div>
+                            <div class="pill-sub">Ajuste automático de parámetros por régimen de mercado</div>
+                        </div>
+                    </div>
+                    <div class="pill">
+                        <div class="pill-icon">🛡️</div>
+                        <div>
+                            <div class="pill-text">Smart Risk Management</div>
+                            <div class="pill-sub">Control de drawdown · Sin Martingala · Sin Grid</div>
+                        </div>
+                    </div>
+                    <div class="pill">
+                        <div class="pill-icon">📊</div>
+                        <div>
+                            <div class="pill-text">Multi-Timeframe Analysis</div>
+                            <div class="pill-sub">Confluencia simultánea en M5, H1, H4 y D1</div>
+                        </div>
+                    </div>
+                    <div class="pill">
+                        <div class="pill-icon">🔄</div>
+                        <div>
+                            <div class="pill-text">Backtesting Robusto</div>
+                            <div class="pill-sub">Validado con 5+ años de datos tick-by-tick</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tech-visual">
+                <div class="tech-ring ring-1"><div class="ring-dot"></div></div>
+                <div class="tech-ring ring-2"><div class="ring-dot"></div></div>
+                <div class="tech-ring ring-3"><div class="ring-dot"></div></div>
+                <div class="tech-core">AFIRIAX<br>ENGINE</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSTRUMENTOS -->
+    <section class="section">
+        <div class="section-header">
+            <p class="section-label">// Instrumentos</p>
+            <h2 class="section-title">Mercados <span>Operados</span></h2>
+            <p class="section-sub">Especializados en los dos activos más líquidos y eficientes para el trading algorítmico.</p>
+        </div>
+        <div class="inst-grid">
+            <div class="inst-card nasdaq">
+                <div class="inst-icon">📈</div>
+                <h3>NASDAQ 100</h3>
+                <div class="inst-ticker">NQ · NAS100 · US Tech 100</div>
+                <p>El índice tecnológico más dinámico del mundo. Nuestros algoritmos explotan la regularidad de sus patrones de liquidez intradía, especialmente en las sesiones de apertura de Nueva York y el overlap europeo-americano.</p>
+                <div class="inst-tags">
+                    <span class="tag">Scalping</span>
+                    <span class="tag">Intraday</span>
+                    <span class="tag">Breakout</span>
+                    <span class="tag">Reversal</span>
+                    <span class="tag">Opening Range</span>
+                </div>
+            </div>
+            <div class="inst-card gold">
+                <div class="inst-icon">🥇</div>
+                <h3>Oro (XAUUSD)</h3>
+                <div class="inst-ticker">XAU/USD · GOLD · Spot Gold</div>
+                <p>El activo refugio por excelencia. Alta volatilidad con tendencias claras y respeto sistemático por los niveles de soporte y resistencia. Los algoritmos de Oro están calibrados para capturar movimientos de 50-200 pips con alta probabilidad.</p>
+                <div class="inst-tags">
+                    <span class="tag">Swing Trading</span>
+                    <span class="tag">Trend Following</span>
+                    <span class="tag">Order Blocks</span>
+                    <span class="tag">FVG</span>
+                    <span class="tag">Safe Haven</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GESTIÓN DE RIESGO -->
+    <section class="section risk-section">
+        <div class="risk-inner">
+            <div>
+                <p class="section-label">// Risk Management</p>
+                <h2 class="section-title">Riesgo <span>Controlado</span></h2>
+                <p class="section-sub">La preservación del capital es nuestra prioridad número uno. Diseñados para superar auditorías de fondeo.</p>
+                <ul class="risk-list">
+                    <li>Sistema estrictamente No Martingala — sin duplicación de lotes tras pérdida</li>
+                    <li>Riesgo máximo por operación configurable (por defecto 1-2% del capital)</li>
+                    <li>Stop Loss obligatorio en cada operación abierta, sin excepciones</li>
+                    <li>Filtro de noticias: pausa automática 30 min antes/después de datos de alto impacto</li>
+                    <li>Límite de drawdown diario: el bot se detiene automáticamente al alcanzar el umbral</li>
+                    <li>Compatible con reglas de cuentas de fondeo (FTMO, MyForexFunds, etc.)</li>
+                </ul>
+            </div>
+            <div class="risk-card-big">
+                <h4>// Parámetros de Control</h4>
+                <div class="risk-metrics">
+                    <div class="metric-row">
+                        <div class="metric-top"><span class="metric-name">Riesgo por Operación</span><span class="metric-val">1-2%</span></div>
+                        <div class="metric-bar"><div class="metric-fill" style="width:20%"></div></div>
+                    </div>
+                    <div class="metric-row">
+                        <div class="metric-top"><span class="metric-name">Drawdown Máximo Diario</span><span class="metric-val">5%</span></div>
+                        <div class="metric-bar"><div class="metric-fill" style="width:50%"></div></div>
+                    </div>
+                    <div class="metric-row">
+                        <div class="metric-top"><span class="metric-name">Stop Loss Dinámico (ATR)</span><span class="metric-val">Activo</span></div>
+                        <div class="metric-bar"><div class="metric-fill" style="width:85%"></div></div>
+                    </div>
+                    <div class="metric-row">
+                        <div class="metric-top"><span class="metric-name">Filtro de Noticias</span><span class="metric-val">Activo</span></div>
+                        <div class="metric-bar"><div class="metric-fill" style="width:100%"></div></div>
+                    </div>
+                    <div class="metric-row">
+                        <div class="metric-top"><span class="metric-name">Ratio Riesgo/Beneficio</span><span class="metric-val">1:2 mín.</span></div>
+                        <div class="metric-bar"><div class="metric-fill" style="width:66%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLATAFORMAS -->
+    <section id="plataformas" class="section">
+        <div class="section-header" style="text-align:center;">
+            <p class="section-label" style="text-align:center;">// Compatibilidad</p>
+            <h2 class="section-title" style="text-align:center;">Plataformas <span>Soportadas</span></h2>
+            <p class="section-sub" style="margin: 0 auto; text-align:center;">Nuestros algoritmos están disponibles para las plataformas de trading más utilizadas a nivel profesional.</p>
+        </div>
+        <div class="plat-grid">
+            <div class="plat-card">
+                <div class="plat-logo">📊</div>
                 <h3>MetaTrader 5</h3>
-                <p>EAs robustos para trading automático en Nasdaq 100.</p>
+                <p>EAs profesionales en MQL5 para Nasdaq 100. Instalación guiada, configuración optimizada y soporte completo post-instalación.</p>
+                <div class="plat-badge">MQL5 · EA ROBOT</div>
             </div>
-            <div class="card" style="border-left-color: #41b883;">
+            <div class="plat-card">
+                <div class="plat-logo">📉</div>
                 <h3>TradingView</h3>
-                <p>Pine Script v5 para alertas precisas en el Oro.</p>
+                <p>Scripts en Pine Script v5 para señales y alertas de Oro. Integración con Webhook para ejecución automática vía broker.</p>
+                <div class="plat-badge">PINE SCRIPT V5</div>
             </div>
-            <div class="card" style="border-left-color: #3e7fb2;">
+            <div class="plat-card">
+                <div class="plat-logo">⚙️</div>
                 <h3>cTrader</h3>
-                <p>cBots en C# para ejecución institucional.</p>
+                <p>cBots en C# con acceso a la API más rápida del mercado retail. Ideal para ejecución institucional de baja latencia.</p>
+                <div class="plat-badge">C# · CBOT</div>
             </div>
         </div>
     </section>
 
-    <footer id="contacto">
-        <p class="warning">ADVERTENCIA DE RIESGO: El trading de derivados financieros conlleva un alto nivel de riesgo. Los rendimientos pasados no son garantía de rentabilidad futura. Opere solo capital que pueda permitirse perder.</p>
-        <p>&copy; 2026 AfiriaxCapital.com | Soluciones Líderes en Trading Algorítmico.</p>
+    <!-- FAQ -->
+    <section id="faq" class="section" style="background: var(--tarjeta);">
+        <div class="section-header" style="text-align:center;">
+            <p class="section-label" style="text-align:center;">// Preguntas</p>
+            <h2 class="section-title" style="text-align:center;">Preguntas <span>Frecuentes</span></h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Necesito experiencia en trading para usar los bots? <span class="faq-arrow">+</span></button>
+                <div class="faq-a">No es necesario. Los algoritmos operan de forma completamente autónoma. Ofrecemos guía de instalación paso a paso y soporte continuo. Eso sí, recomendamos entender los fundamentos del riesgo antes de empezar.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Cuál es el capital mínimo recomendado? <span class="faq-arrow">+</span></button>
+                <div class="faq-a">Para cuentas propias recomendamos un mínimo de 500-1.000 USD para operar con gestión de riesgo correcta. Para cuentas de fondeo (FTMO, etc.), el bot está ajustado para cumplir sus reglas de drawdown desde el primer día.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Los bots funcionan las 24 horas? <span class="faq-arrow">+</span></button>
+                <div class="faq-a">Los bots están activos durante las sesiones de mayor liquidez: overlap europeo-americano (14:00–18:00 CET) y apertura de Nueva York. Fuera de estas ventanas, el sistema no opera para evitar movimientos de baja calidad.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Qué broker necesito? <span class="faq-arrow">+</span></button>
+                <div class="faq-a">Cualquier broker regulado que soporte MT5 o cTrader con spreads competitivos. Recomendamos brokers ECN/STP como IC Markets, Pepperstone o Fusion Markets para obtener la mejor ejecución posible.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Los bots están backtestados? <span class="faq-arrow">+</span></button>
+                <div class="faq-a">Sí. Todos los algoritmos han sido validados con datos tick-by-tick de alta calidad (99.9% modeling quality) sobre un mínimo de 5 años históricos. Los resultados del backtest están disponibles para revisión bajo petición.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q" onclick="toggleFaq(this)">¿Qué soporte ofrecen después de la compra? <span class="faq-arrow">+</span></button>
+                <div class="faq-a">Soporte completo vía WhatsApp y Telegram. Incluye: instalación guiada, configuración personalizada según tu capital y perfil de riesgo, y actualizaciones del algoritmo cuando el mercado lo requiera.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-section">
+        <p class="section-label" style="text-align:center;">// Acceso</p>
+        <h2>Empieza a <span>Operar</span><br>Hoy Mismo</h2>
+        <p>Plazas limitadas. Contáctanos por WhatsApp para recibir información detallada y condiciones de acceso.</p>
+        <a href="https://wa.me/34631600506?text=Hola,%20estoy%20interesado%20en%20los%20bots%20de%20AfiriaxCapital" class="btn-primary" target="_blank" style="font-size:1rem; padding: 18px 48px;">
+            Hablar con un Especialista →
+        </a>
+        <div class="cta-contact">
+            <span class="contact-line">WhatsApp: <a href="https://wa.me/34631600506" target="_blank">+34 631 600 506</a></span>
+            <span class="contact-line">Web: <a href="#">AfiriaxCapital.com</a></span>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-brand">
+            <div class="logo-text">Afiriax<span>Capital</span></div>
+            <p>Soluciones de trading algorítmico de alta frecuencia para mercados de futuros y divisas. Especializados en NASDAQ 100 y Oro (XAUUSD).</p>
+        </div>
+        <div class="footer-right">
+            <div class="footer-links">
+                <a href="#como-funciona">Proceso</a>
+                <a href="#tecnologia">Tecnología</a>
+                <a href="#plataformas">Plataformas</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <p class="footer-copy">© 2026 AfiriaxCapital.com · Todos los derechos reservados</p>
+        </div>
     </footer>
 
+    <div class="warning-bar">
+        <strong>ADVERTENCIA DE RIESGO:</strong> El trading de derivados financieros (CFDs, futuros, divisas) conlleva un alto nivel de riesgo y puede resultar en la pérdida de todo el capital invertido. Los rendimientos pasados no garantizan rentabilidad futura. Opere únicamente con capital que pueda permitirse perder. Consulte a un asesor financiero independiente antes de operar.
+    </div>
+
+    <script>
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        const ring = document.getElementById('cursorRing');
+        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            cursor.style.left = mouseX - 5 + 'px';
+            cursor.style.top = mouseY - 5 + 'px';
+        });
+        function animateRing() {
+            ringX += (mouseX - ringX) * 0.12;
+            ringY += (mouseY - ringY) * 0.12;
+            ring.style.left = ringX - 18 + 'px';
+            ring.style.top = ringY - 18 + 'px';
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.4)'; });
+            el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
+        });
+
+        // Counter animation
+        function animateCounters() {
+            document.querySelectorAll('[data-target]').forEach(el => {
+                const target = parseFloat(el.dataset.target);
+                const isDecimal = target < 10;
+                let current = 0;
+                const step = target / 60;
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) { current = target; clearInterval(timer); }
+                    el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
+                    if (el.dataset.target === '100') el.textContent = Math.floor(current) + '%';
+                }, 25);
+            });
+        }
+        const heroObserver = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) { animateCounters(); heroObserver.disconnect(); }
+        }, { threshold: 0.5 });
+        heroObserver.observe(document.querySelector('.hero-stats'));
+
+        // FAQ
+        function toggleFaq(btn) {
+            const answer = btn.nextElementSibling;
+            const isOpen = answer.classList.contains('open');
+            document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+            document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
+            if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
+        }
+
+        // Scroll reveal
+        const revealObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.card, .how-item, .inst-card, .plat-card, .pill, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, background 0.3s';
+            revealObserver.observe(el);
+        });
+    </script>
 </body>
 </html>
