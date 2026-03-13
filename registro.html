@@ -25,12 +25,9 @@
     <div class="auth-card">
         <div class="logo">Afriax<span>Capital</span></div>
         <h2 id="auth-title">Iniciar Sesión</h2>
-        
         <input type="email" id="email" placeholder="Correo Electrónico">
         <input type="password" id="password" placeholder="Contraseña">
-        
         <button id="auth-btn" onclick="ejecutarAuth()">Entrar al Terminal</button>
-        
         <div class="toggle-link" onclick="toggleAuth()">
             <p id="toggle-text">¿No tienes cuenta? <span>Regístrate aquí</span></p>
         </div>
@@ -39,6 +36,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBRfsSfxaNcZ3YIhttSJb0W8V9hu-JGur8",
@@ -51,6 +49,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
         let esRegistro = false;
 
@@ -67,8 +66,14 @@
 
             try {
                 if (esRegistro) {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                    alert("Cuenta creada con éxito");
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    // IMPORTANTE: Crea el permiso como pendiente
+                    await setDoc(doc(db, "usuarios", res.user.uid), {
+                        email: email,
+                        estado: "pendiente",
+                        fecha: new Date().toISOString()
+                    });
+                    alert("Registro recibido. Revisaremos tu pago manualmente.");
                 } else {
                     await signInWithEmailAndPassword(auth, email, pass);
                 }
