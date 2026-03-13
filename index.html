@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfiriaxCapital | Bots de Trading Avanzados</title>
+    <style>
+        :root {
+            --verde: #76ff03; /* Verde neón similar al logo */
+            --fondo: #0a0a0a;
+            --tarjeta: #1a1a1a;
+            --texto: #ffffff;
+        }
 
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            margin: 0; background: var(--fondo); color: var(--texto); 
+            line-height: 1.6;
+        }
+
+        /* NAVEGACIÓN */
+        nav { 
+            display: flex; justify-content: space-between; padding: 20px 10%; 
+            background: rgba(0,0,0,0.9); position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid #333;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--texto); }
+        .logo span { color: var(--verde); }
+
+        /* SECCIÓN HERO */
+        .hero { 
+            height: 80vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center;
+            background: radial-gradient(circle at center, #1a3311 0%, #0a0a0a 70%);
+            padding: 0 20px;
+        }
+        .hero h1 { font-size: 4rem; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .hero h1 span { color: var(--verde); }
+        .hero p { font-size: 1.3rem; color: #ccc; max-width: 700px; margin: 20px 0; }
+
+        /* BOTONES */
+        .btn { 
+            padding: 15px 35px; background: var(--verde); color: black; 
+            text-decoration: none; border-radius: 50px; font-weight: bold; 
+            transition: 0.3s; box-shadow: 0 0 20px rgba(118, 255, 3, 0.3);
+        }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(118, 255, 3, 0.5); }
+
+        /* SECCIÓN PLATAFORMAS */
+        .plataformas { padding: 100px 10%; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 50px; }
+        .card { 
+            background: var(--tarjeta); padding: 40px; border-radius: 15px; 
+            border: 1px solid #333; transition: 0.3s;
+        }
+        .card:hover { border-color: var(--verde); transform: translateY(-5px); }
+        .card h3 { color: var(--verde); margin-top: 0; font-size: 1.5rem; }
+
+        /* FOOTER */
+        footer { padding: 50px; text-align: center; border-top: 1px solid #333; color: #666; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">AFIRIAX<span>CAPITAL</span></div>
+        <div class="menu">
+            <a href="#contacto" style="color:white; text-decoration:none;">Contacto</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>Dominando <span>Nasdaq & Oro</span></h1>
+        <p>Bots de alta precisión optimizados para MetaTrader 5, TradingView y cTrader. Tecnología algorítmica para el trader profesional.</p>
+        <a href="#contacto" class="btn">SOLICITAR ACCESO</a>
+    </header>
+
+    <section class="plataformas">
+        <h2>Sistemas Disponibles</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>MetaTrader 5</h3>
+                <p>Expert Advisors (EAs) optimizados para una ejecución ultrarrápida en el mercado Nasdaq.</p>
+            </div>
+            <div class="card">
+                <h3>TradingView</h3>
+                <p>Indicadores avanzados y alertas inteligentes para tu operativa manual o semiautomática en el Oro.</p>
+            </div>
+            <div class="card">
+                <h3>cTrader</h3>
+                <p>cBots desarrollados con C# para máxima estabilidad y gestión de riesgo profesional.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <p>&copy; 2026 AfiriaxCapital.com - Trading Algorítmico de Alto Rendimiento.</p>
+    </footer>
+
+</body>
+</html>
