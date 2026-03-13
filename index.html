@@ -479,23 +479,23 @@
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursorRing"></div>
 
-    <!-- TICKER -->
-    <div class="ticker-bar">
-        <div class="ticker-label">LIVE MARKETS</div>
-        <div style="overflow:hidden;flex:1;display:flex;align-items:center;">
-            <div class="ticker-track" id="tickerTrack">
-                <!-- Se rellena con JS en tiempo real -->
-                <span class="ticker-item" id="tick-NQ">NQ100 <span>Cargando...</span></span>
-                <span class="ticker-item" id="tick-XAU">XAUUSD <span>Cargando...</span></span>
-                <span class="ticker-item" id="tick-SPX">SPX500 <span>Cargando...</span></span>
-                <span class="ticker-item" id="tick-DXY">DXY <span>Cargando...</span></span>
-                <span class="ticker-item" id="tick-VIX">VIX <span>Cargando...</span></span>
-                <span class="ticker-item" id="tick-NQ2">NQ100 <span>—</span></span>
-                <span class="ticker-item" id="tick-XAU2">XAUUSD <span>—</span></span>
-                <span class="ticker-item" id="tick-SPX2">SPX500 <span>—</span></span>
-                <span class="ticker-item" id="tick-DXY2">DXY <span>—</span></span>
-                <span class="ticker-item" id="tick-VIX2">VIX <span>—</span></span>
-            </div>
+    <!-- TICKER — TradingView Widget (precios reales, gratuito) -->
+    <div class="ticker-bar" style="padding:0; height:46px;">
+        <div class="tradingview-widget-container" style="height:46px; width:100%;">
+            <div class="tradingview-widget-container__widget" style="height:46px;"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+                "symbols": [
+                    {"proName": "NASDAQ:NDX",  "title": "NASDAQ 100"},
+                    {"proName": "TVC:GOLD",    "title": "ORO (XAU/USD)"}
+                ],
+                "showSymbolLogo": false,
+                "isTransparent": true,
+                "displayMode": "compact",
+                "colorTheme": "dark",
+                "locale": "es"
+            }
+            </script>
         </div>
     </div>
 
@@ -801,67 +801,6 @@
     </div>
 
     <script>
-        /* ══════════════════════════════════════════════
-           PRECIOS EN TIEMPO REAL — Finnhub API
-           Clave pública gratuita (60 llamadas/min)
-           Para obtener la tuya: https://finnhub.io/register
-        ══════════════════════════════════════════════ */
-        const FINNHUB_KEY = 'd6q229hr01qhcrmij57gd6q229hr01qhcrmij580';
-
-        // Mapa: [idHTML, símbolo Finnhub, nombre display, decimales]
-        const SYMBOLS = [
-            ['NQ',  'OANDA:NAS100_USD', 'NQ100',  2],
-            ['XAU', 'OANDA:XAU_USD',    'XAUUSD', 2],
-            ['SPX', 'OANDA:SPX500_USD', 'SPX500', 2],
-            ['DXY', 'OANDA:US30_USD',   'US30',   2],
-            ['VIX', 'CBOE:VIX',         'VIX',    2],
-        ];
-
-        // Cache de precios previos para calcular % cambio intradía
-        const prevPrices = {};
-
-        function fmt(num, dec) {
-            return num.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-        }
-
-        function renderTick(id, name, price, pct) {
-            const up = pct >= 0;
-            const arrow = up ? '▲' : '▼';
-            const cls = up ? 'up' : 'down';
-            const html = `${name} <span class="${cls}">${arrow} ${fmt(price,2)} ${up?'+':''}${pct.toFixed(2)}%</span>`;
-            const el1 = document.getElementById('tick-' + id);
-            const el2 = document.getElementById('tick-' + id + '2');
-            if (el1) el1.innerHTML = html;
-            if (el2) el2.innerHTML = html;
-        }
-
-        async function fetchQuote(sym) {
-            const url = `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(sym)}&token=${FINNHUB_KEY}`;
-            const r = await fetch(url);
-            return r.json();
-        }
-
-        async function updatePrices() {
-            for (const [id, sym, name, dec] of SYMBOLS) {
-                try {
-                    const data = await fetchQuote(sym);
-                    // data.c = precio actual, data.pc = cierre anterior
-                    if (data && data.c && data.c > 0) {
-                        const pct = ((data.c - data.pc) / data.pc) * 100;
-                        renderTick(id, name, data.c, pct);
-                    }
-                } catch(e) {
-                    console.warn('Error fetching', sym, e);
-                }
-                // Pequeña pausa entre llamadas para no sobrepasar el rate limit
-                await new Promise(r => setTimeout(r, 300));
-            }
-        }
-
-        // Primera carga inmediata, luego cada 30 segundos
-        updatePrices();
-        setInterval(updatePrices, 30000);
-
         /* ══════════════════════════════════════════════
            CURSOR PERSONALIZADO
         ══════════════════════════════════════════════ */
